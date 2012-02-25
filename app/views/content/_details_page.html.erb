@@ -1,0 +1,45 @@
+<div data-role="page" data-theme="b" id="details-page">
+<div data-role="header">
+	<h1>Provider Details</h1>
+</div>
+
+<div data-role="content">
+
+	<div class='provider-details' class='panel' title='Provider Details'>
+		<div class='row' style='text-align:center' label='options'>
+			<h2 data-bindTo='Agency'></h2>
+			<p>Please call to make an appointment or ask about available services.</p>
+			<a class="provider-Phone-link" href="" data-role="button">Call <span data-bindTo="Phone"></span></a>
+		</div>
+	</div>
+
+	<div data-role="collapsible-set">
+
+		<div data-role="collapsible" data-collapsed="false">
+			<h3>Health Services</h3>
+			<p data-bindTo='Medical Services - Expanded'></p>
+		</div>
+			
+		<div data-role="collapsible" data-collapsed="true">
+			<h3>Social Services</h3>
+			<p data-bindTo='Social Services'></p>
+		</div>
+
+		<div data-role="collapsible" data-collapsed="true">
+			<h3>Additional Services</h3>
+			<p data-bindTo="Additional Health Services"></p>
+		</div>	
+
+		<div data-role="collapsible" data-collapsed="true">
+			<h3>Hours & Location</h3>
+			<p data-bindTo='Hours'></p>
+		</div>
+
+	</div>
+
+</div>
+<div style=text-align:center data-role="footer">
+	<p style=font-size:8pt >504 HealthNet Care Finder</p>
+</div>
+
+</div>
