@@ -1,0 +1,15 @@
+<h1>Nola Health Mobile - Administration - Manage Providers</h1>
+
+<p><%= link_to 'Add a provider', new_provider_url %>
+
+<table>
+  <tr>
+    <th>Provider<th>
+  </tr>
+  <% @providers.each do |provider| %>
+    <tr>
+      <td><%= provider.agency %></td>
+      <td><%= link_to 'edit', edit_provider_url(provider) %></td>
+    </tr>
+  <% end %>
+</table>

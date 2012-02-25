@@ -1,0 +1,32 @@
+<div data-role="page" data-theme="b" id="start-page">
+	<header data-role="header"> <h1>504HealthNet Care Finder</h1> </header>
+
+	<div data-role="content">
+		<h3>504HealthNet Care Finder</h3>	
+		<h4>Find Low- or No-Pay Community Health Clinics in your neighborhood</h4>
+		<div data-role="fieldcontain">
+		 	<fieldset data-role="controlgroup" class="insurance-type">
+				<legend>Select Insurance Needs</legend>
+				<input type="checkbox" name="private" id="private"/><label for="private">Private</label>
+				<input type="checkbox" name="medicare" id="medicare" /><label for="medicare">Medicare</label>
+				<input type="checkbox" name="uninsured" id="uninsured" /><label for="uninsured">Uninsured</label>
+		   </fieldset>
+		</div>
+		<!--
+		<p>Please provide a location:<br/>
+			(Any address will do)
+		</p>
+		<fieldset>
+			<label>Street Address: <input name="street" /></label>
+			<label>City: <input name="city" value="New Orleans" /></label>
+		</fieldset>
+		-->
+		<button data-role="button" type="submit">Go!</button>
+
+		<div style=text-align:center data-role="footer">
+			<p>Provided by 504HealthNet</p>
+		</div>
+	</div>
+</div>
+
+<%= render :partial => 'details_page' %>
