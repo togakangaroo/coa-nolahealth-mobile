@@ -1,10 +1,12 @@
 allClinics = -> window.Application.clinics
-insuranceTypes = -> allClinics()["Types of Insurance Accepted (Private, Medicaid, Uninsured)"]
+insuranceTypeKey = -> "Types of Insurance Accepted (Private, Medicaid, Uninsured)"
 
 getClinic = (idx) =>
 	clinic = {}
 	_.each allClinics(), (values, prop) -> clinic[prop] = values[idx]
 	clinic
+
+currentlyFound = []
 		 
 $('#start-page').live 'pageinit', ->
 	$('button[type=submit]').click (e) ->
@@ -15,18 +17,19 @@ $('#start-page').live 'pageinit', ->
 				.toArray(), 
 			'name')
 		anyMatches = _.bind _.any, _, searchFor
-		foundMatrix = _.map insuranceTypes(), (insurance) -> anyMatches((term)-> new RegExp(term, "i").test(insurance))
+		foundMatrix = _.map allClinics()[insuranceTypeKey], (insurance) -> anyMatches((term)-> new RegExp(term, "i").test(insurance))
 		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
-		found = _.map foundIndicies, getClinic
-		console.log('found', foundMatrix, foundIndicies, found)
+		currentlyFound = _.map foundIndicies, getClinic
+
+		console.log('found', currentlyFound)
 		$.mobile.changePage '#details-page'
 
 $('#details-page').live 'pageinit', ->
 	$page = $(this)
-	clinic = getClinic 4
+	clinic = _.first currentlyFound
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
 
 	_.each clinic, (v, k) -> 
-		$page.find("[data-bindTo='#{k}']").text( ((v||"")+"").replace('\n', '<br />') )
+		$page.find("[data-bindTo='#{k}']").text( ((v||"")+"") )
 	$page.find('.provider-Phone-link')
 		.val "tel:#{strippedPhone}"
