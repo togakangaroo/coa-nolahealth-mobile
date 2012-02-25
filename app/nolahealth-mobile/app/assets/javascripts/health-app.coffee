@@ -1,6 +1,9 @@
+allClinics = -> window.Application.clinics
+insuranceTypes = -> allClinics()["Types of Insurance Accepted (Private, Medicaid, Uninsured)"]
+
 getClinic = (idx) =>
 	clinic = {}
-	_.each window.Application.clinics, (values, prop) -> clinic[prop] = values[idx]
+	_.each allClinics(), (values, prop) -> clinic[prop] = values[idx]
 	clinic
 		 
 $('#start-page').live 'pageinit', ->
@@ -11,6 +14,9 @@ $('#start-page').live 'pageinit', ->
 				.filter(-> $(this).prop('checked'))
 				.toArray(), 
 			'name')
+		anyMatches = _.bind _.any, _, searchFor
+		found = _.map insuranceTypes(), (insurance) -> anyMatches((term)-> new RegExp(term, "i").test(insurance))
+		console.log('found', found)
 		$.mobile.changePage '#details-page'
 
 $('#details-page').live 'pageinit', ->
