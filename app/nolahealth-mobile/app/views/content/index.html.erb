@@ -14,13 +14,4 @@
 	</div>
 </div>
 
-<div data-role="page" data-theme="c" id="details-page">
-	<header data-role=header><h1>Welcome to 504 Healthnet Provider Finder</h1></header>
-	<div data-role="content">
-		This worked ok
-		<script id=clinic-details-template type="script/underscore-template">
-			<p class=clinic-name>{{ Agency }}</p>
-		</script>
-		<div class="details-area"></div>
-	</div>
-</div>
+<%= render :partial => 'details_page' %>
