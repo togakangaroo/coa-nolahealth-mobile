@@ -1,7 +1,12 @@
 NolahealthMobile::Application.routes.draw do
-  root :to => 'content#index'
+	root :to => 'content#index'
 
+	# Administrative resources
+	get 'admin' => 'admin#index'
 
+	scope '/admin' do
+		resources :providers
+	end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
