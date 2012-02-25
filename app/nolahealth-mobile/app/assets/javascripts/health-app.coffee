@@ -12,6 +12,6 @@ $('#details-page').live 'pageinit', ->
 		"Medical Services - Expanded": "Adult & Pediatric Primary Care, Labs, OB, Gyn, Family Planning, Podiatry, Vision, Dental, Psychiatry, Counseling, Individual, Group & Family Therapy, Substance Abuse"
 		"Additional Health Services": "Nutritional counseling, Health education, "
 		"Phone": "(985) 785-5800"
-
-	console.log 'loaded page', this, arguments
-	console.log _.template($('#clinic-details-template', this).html())(clinic)
+	#compileTemplate = _.template $('#clinic-details-template', this).html()
+	console.log 'page', this, arguments
+	#$('.details-area', this).empty().append compileTemplate(clinic)
