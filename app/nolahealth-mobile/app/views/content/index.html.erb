@@ -1,24 +1,17 @@
-<div data-role="page" data-theme="c" id="index-page">
+<div data-role="page" data-theme="b" id="index-page">
 	<header data-role="header"> <h1>504HealthNet Care Finder</h1> </header>
 
 	<div data-role="content">
 		<h3>504HealthNet Care Finder</h3>	
 		<h4>Find Low- or No-Pay Community Health Clinics in your neighborhood</h4>
 		<div data-role="fieldcontain">
-		 	<fieldset data-role="controlgroup">
-				<legend>What kind of services do you need?</legend>
-				<input type="checkbox" name="physical" id="physical"/><label for="physical">Physical</label>
-				<input type="checkbox" name="behavioral" id="behavioral" /><label for="behavioral">Behavioral</label>
-				<input type="checkbox" name="dental" id="dental" /><label for="dental">Dental</label>
+		 	<fieldset data-role="controlgroup" class="insurance-type">
+				<legend>Select Insurance Needs</legend>
+				<input type="checkbox" name="private" id="private"/><label for="private">Private</label>
+				<input type="checkbox" name="medicare" id="medicare" /><label for="medicare">Medicare</label>
+				<input type="checkbox" name="uninsured" id="uninsured" /><label for="uninsured">Uninsured</label>
 		   </fieldset>
 		</div>
-		<select multiple size="4" name="insurance-type">
-		      <option selected value="select">Select Insurance Needs</option>
-		      <option value="Private">Private</option>
-		      <option value="medicare">Medicare</option>
-		      <option value="uninsured">Uninsured</option>
-		</select>
-
 		<p>Please provide a location:<br/>
 			(Any address will do)
 		</p>
