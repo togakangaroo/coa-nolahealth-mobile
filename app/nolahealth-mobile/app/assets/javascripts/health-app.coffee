@@ -6,6 +6,11 @@ getClinic = (idx) =>
 $('#start-page').live 'pageinit', ->
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
+		searchFor = _.pluck(
+			$(".insurance-type input[type=checkbox]")
+				.filter(-> $(this).prop('checked'))
+				.toArray(), 
+			'name')
 		$.mobile.changePage '#details-page'
 
 $('#details-page').live 'pageinit', ->
