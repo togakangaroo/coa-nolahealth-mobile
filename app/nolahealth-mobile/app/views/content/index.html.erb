@@ -1,16 +1,37 @@
 <div data-role="page" data-theme="c" id="index-page">
-	<header data-role=header><h1>Welcome to 504 Healthnet Provider Finder</h1></header>
-	<div data-role="content">
-		<div data-role="fieldcontain">
-			<fieldset data-role="controlgroup">
-				<legend>What Help?</legend>
-				<input type=checkbox name=physical id="physical" /><label for=physical>Physical</label>
-				<input type=checkbox name=mental id="mental" /><label for=mental>Mental</label>
-				<input type=checkbox name=dental id="dental" /><label for=dental>Dental</label>
-			<fieldset>
-		</div>
+	<header data-role="header"> <h1>504HealthNet Care Finder</h1> </header>
 
-		<p><a href="#details-page" data-role="button">Show Details for a clinic</a></p>
+	<div data-role="content">
+		<h3>504HealthNet Care Finder</h3>	
+		<h4>Find Low- or No-Pay Community Health Clinics in your neighborhood</h4>
+		<div data-role="fieldcontain">
+		 	<fieldset data-role="controlgroup">
+				<legend>What kind of services do you need?</legend>
+				<input type="checkbox" name="physical" id="physical"/><label for="physical">Physical</label>
+				<input type="checkbox" name="behavioral" id="behavioral" /><label for="behavioral">Behavioral</label>
+				<input type="checkbox" name="dental" id="dental" /><label for="dental">Dental</label>
+		   </fieldset>
+		</div>
+		<select multiple size="4" name="insurance-type">
+		      <option selected value="select">Select Insurance Needs</option>
+		      <option value="Private">Private</option>
+		      <option value="medicare">Medicare</option>
+		      <option value="uninsured">Uninsured</option>
+		</select>
+
+		<p>Please provide a location:<br/>
+			(Any address will do)
+		</p>
+		<fieldset>
+			<label>Street Address: <input name="street" /></label>
+			<label>City: <input name="city" value="New Orleans" /></label>
+		</fieldset>
+		
+		<a href="#details-page" data-role="button">Go!</a>
+
+		<div style=text-align:center data-role="footer">
+			<p>Provided by 504HealthNet</p>
+		</div>
 	</div>
 </div>
 
