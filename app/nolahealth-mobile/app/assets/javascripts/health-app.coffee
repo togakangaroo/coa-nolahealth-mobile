@@ -3,6 +3,11 @@ getClinic = (idx) =>
 	_.each window.Application.clinics, (values, prop) -> clinic[prop] = values[idx]
 	clinic
 		 
+$('#start-page').live 'pageinit', ->
+	$('button[type=submit]').click (e) ->
+		e.preventDefault()
+		$.mobile.changePage '#details-page'
+
 $('#details-page').live 'pageinit', ->
 	$page = $(this)
 	clinic = getClinic 4
