@@ -15,8 +15,10 @@ $('#start-page').live 'pageinit', ->
 				.toArray(), 
 			'name')
 		anyMatches = _.bind _.any, _, searchFor
-		found = _.map insuranceTypes(), (insurance) -> anyMatches((term)-> new RegExp(term, "i").test(insurance))
-		console.log('found', found)
+		foundMatrix = _.map insuranceTypes(), (insurance) -> anyMatches((term)-> new RegExp(term, "i").test(insurance))
+		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
+		found = _.map foundIndicies, getClinic
+		console.log('found', foundMatrix, foundIndicies, found)
 		$.mobile.changePage '#details-page'
 
 $('#details-page').live 'pageinit', ->
