@@ -5,12 +5,11 @@
 
 <div data-role="content">
 
-	<div id='providerDet' class='panel' title='Provider Details'>
+	<div class='provider-details' class='panel' title='Provider Details'>
 		<div class='row' style='text-align:center' label='options'>
-			<h2>St. Charles Community Health Center</h2>
+			<h2 data-bindTo='Agency'></h2>
 			<p>Please call to make an appointment or ask about available services.</p>
-			<a href="tel:9857259330" data-role="button">Call (985) 725-9330</a>
-			<a href="sms:9857259330" data-role="button">Share via text message</a>
+			<a class="provider-Phone-link" href="tel:9857259330" data-role="button">Call <span data-bindTo="Phone"></span></a>
 		</div>
 	</div>
 
