@@ -4,6 +4,7 @@ class AddProvider < ActiveRecord::Migration
 			t.string :agency, :limit => 256
 			t.string :organization, :limit => 256
 			t.string :address, :limit => 256
+			t.string :neighborhood, :limit => 256
 			t.string :city, :limit => 64
 			t.string :parish, :limit => 64
 			t.string :state, :limit => 2
