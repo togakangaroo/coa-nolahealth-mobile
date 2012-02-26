@@ -5,6 +5,9 @@ getClinic = (idx) =>
 	clinic = {}
 	_.each allClinics(), (values, prop) -> clinic[prop] = values[idx]
 	clinic
+bindClinic = (clinic, $el) -> 
+	_.each clinic, (v, k) -> 
+		$el.find("[data-bindTo='#{k}']").text( ((v||"")+"") )
 
 states = ( ->
 	currentlyFound = []
@@ -38,12 +41,14 @@ $('#start-page').live 'pageinit', ->
 			return alert "No results found"
 		$.mobile.changePage '#details-page'
 
+$('#results-page').live 'pageshow', ->
+
 $('#details-page').live 'pageshow', ->
 	$page = $(this)
 	clinic = states.getCurrentlySelected()||{}
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
 
-	_.each clinic, (v, k) -> 
-		$page.find("[data-bindTo='#{k}']").text( ((v||"")+"") )
+	bindClinic clinic, $page
+
 	$page.find('.provider-Phone-link')
 		.val "tel:#{strippedPhone}"
