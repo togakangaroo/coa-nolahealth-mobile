@@ -28,7 +28,9 @@ $('#start-page').live 'pageinit', ->
 
 $('#details-page').live 'pageinit', ->
 	$page = $(this)
-	clinic = _.first(currentlyFound)||{}
+	idx = Math.floor(currentlyFound.length*Math.random())
+	console.log 'index', idx
+	clinic = currentlyFound[idx]||{}
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
 
 	_.each clinic, (v, k) -> 
