@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Nola Health Mobile</title>
+    <title>504HealthNet Care Finder</title>
 
-    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile.structure-1.0.1.min.css" />
@@ -12,13 +12,12 @@
     <%= javascript_include_tag "application" %>
     <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
     <script type="text/javascript"
-            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDs-ipMARGfOZpn1h1h_hMueoUpPvk5Lok&sensor=true">
+            src="http://maps.googleapis.com/maps/api/js?key=<%= NolahealthMobile::Application.config.gmaps_api_key %>&sensor=true">
     </script>
     <%= csrf_meta_tags %>
     <%= render :partial => 'shared/hackathon-data2' %>
   </head>
   <body>
     <%= yield %>
-    
   </body>
 </html>
