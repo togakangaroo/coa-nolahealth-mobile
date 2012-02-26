@@ -8,6 +8,7 @@ getClinic = (idx) =>
 bindClinic = (clinic, $el) -> 
 	_.each clinic, (v, k) -> 
 		$el.find("[data-bindTo='#{k}']").text( ((v||"")+"") )
+	$el
 
 states = ( ->
 	currentlyFound = []
@@ -17,9 +18,9 @@ states = ( ->
 		if(!(found&&found.length))
 			return false
 		currentlyFound = found
-		currentlySelected = found[Math.floor(currentlyFound.length*Math.random())]
-		true		
-	getCurrentlyFound: (found) -> currentlyFound
+		true	
+	setCurrentlySelected: (c) => currentlySelected = c	
+	getCurrentlyFound: (found) -> _.first(currentlyFound, 5)
 	getCurrentlySelected: () -> currentlySelected
 )()
 	 
@@ -39,9 +40,19 @@ $('#start-page').live 'pageinit', ->
 
 		if(!states.setCurrentlyFound(currentlyFound))
 			return alert "No results found"
-		$.mobile.changePage '#details-page'
+		$.mobile.changePage '#results-page'
 
 $('#results-page').live 'pageshow', ->
+	template = $('#item-template', this)
+	results = $('ul.results-list', this); console.log('results page', results)
+	_(states.getCurrentlyFound()).chain()
+		.map((c) -> 
+			bindClinic c, template.clone().show().click ->
+				states.setCurrentlySelected c
+				$.mobile.changePage '#details-page'
+			)
+		.each(($c) -> results.append($c))
+	results.listview 'refresh'
 
 $('#details-page').live 'pageshow', ->
 	$page = $(this)

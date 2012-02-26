@@ -4,11 +4,11 @@
 </div>
 <div data-role="content">
 	<div class="content-primary">
-		<ul data-role="listview">
-			<li>
-				<h3 data-bindTo="Agency"></h3>
-				<p><strong><span class="distance">n</span> miles from entered address</strong></p>
-			</li>
+		<li style="display: none" id="item-template">
+			<h3 data-bindTo="Agency"></h3>
+			<p><strong><span class="distance">n</span> miles from entered address</strong></p>
+		</li>
+		<ul class="results-list" data-role="listview">
 
 		</ul>
 	</div>
