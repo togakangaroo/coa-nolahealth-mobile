@@ -44,7 +44,7 @@ $('#start-page').live 'pageinit', ->
 
 $('#results-page').live 'pageshow', ->
 	template = $('#item-template', this)
-	results = $('ul.results-list', this); console.log('results page', results)
+	results = $('ul.results-list', this);
 	_(states.getCurrentlyFound()).chain()
 		.map((c) -> 
 			bindClinic c, template.clone().show().click ->
