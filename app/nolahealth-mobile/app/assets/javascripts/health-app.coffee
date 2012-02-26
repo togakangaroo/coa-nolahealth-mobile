@@ -26,10 +26,9 @@ $('#start-page').live 'pageinit', ->
 			return alert "No results found"
 		$.mobile.changePage '#details-page'
 
-$('#details-page').live 'pageinit', ->
+$('#details-page').live 'pageshow', ->
 	$page = $(this)
 	idx = Math.floor(currentlyFound.length*Math.random())
-	console.log 'index', idx
 	clinic = currentlyFound[idx]||{}
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
 
