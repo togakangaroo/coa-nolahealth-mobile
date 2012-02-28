@@ -1,6 +1,9 @@
 allClinics = -> window.Application.clinics
 insuranceTypeKey = "Types of Insurance Accepted (Private, Medicaid, Uninsured)"
 
+onCreate = _.bind $.fn.on, $(document), 'pageinit'
+onShow = _.bind $.fn.on, $(document), 'pageshow'
+
 getClinic = (idx) =>
 	clinic = {}
 	_.each allClinics(), (values, prop) -> clinic[prop] = values[idx]
@@ -24,7 +27,7 @@ states = ( ->
 	getCurrentlySelected: () -> currentlySelected
 )()
 	 
-$('#start-page').live 'pageinit', ->
+onCreate '#start-page', ->
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
 		searchFor = _.pluck(
@@ -42,7 +45,7 @@ $('#start-page').live 'pageinit', ->
 			return alert "No results found"
 		$.mobile.changePage '#results-page'
 
-$('#results-page').live 'pageshow', ->
+onShow '#results-page', ->
 	template = $('#item-template', this)
 	results = $('ul.results-list', this).empty();
 	_(states.getCurrentlyFound()).chain()
@@ -54,7 +57,7 @@ $('#results-page').live 'pageshow', ->
 		.each(($c) -> results.append($c))
 	results.listview 'refresh'
 
-$('#details-page').live 'pageshow', ->
+onShow '#details-page', ->
 	$page = $(this)
 	clinic = states.getCurrentlySelected()||{}
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
