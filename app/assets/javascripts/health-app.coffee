@@ -56,11 +56,9 @@ onCreate '#start-page', ->
 onShow '#results-page', (currentlyFound)->
 	template = $('#item-template', this)
 	results = $('ul.results-list', this).empty();
-	_.chain(currentlyFound).map((c) -> 
-			bindClinic c, template.clone().show().click ->
-				changePage '#details-page', c
-			)
-		.each(($c) -> results.append($c))
+	_.each currentlyFound, (c) -> 
+			bindClinic(c, template.clone().show().click -> changePage '#details-page', c)
+			.appendTo(results)
 	results.listview 'refresh'
 
 onShow '#details-page', (clinic) ->
