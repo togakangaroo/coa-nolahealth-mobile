@@ -27,9 +27,6 @@ onCreate '#start-page', ->
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
 
-		street = $('[name=street] ', page).val()
-		origin = street+" "+$('[name=city]', page).val()
-
 		searchFor = _.pluck(
 			$(".insurance-type input[type=checkbox]")
 				.filter(-> $(this).prop('checked'))
@@ -41,24 +38,33 @@ onCreate '#start-page', ->
 		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
 		currentlyFound = _.map _.first(foundIndicies, 5), getClinic
 
-		locationEntered = -> !!street.replace(' ', '')
-		if locationEntered()
-			lookUpAddresses = _.difference(_.map(currentlyFound, getFullAddress), knownDistances[origin])
-
-			Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
-				knownDistances[origin] = knownDistances[origin]||{}
-				$.extend knownDistances[origin], _.zipHash(lookUpAddresses, foundAddresses)
-
 		if(!currentlyFound.length)
 			return alert "No results found"
-		changePage '#results-page', currentlyFound
+		
+		street = $('[name=street] ', page).val()
+		changePage '#results-page', 
+			clinics: currentlyFound
+			origin: street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
 
-onShow '#results-page', (currentlyFound)->
+onShow '#results-page', (model)->
 	template = $('#item-template', this)
+
+	if model.origin
+		lookUpAddresses = _.difference(_.map(model.clinics, getFullAddress), knownDistances[model.origin])
+
+		Application.Mapping.getDistances(model.origin, lookUpAddresses).done (foundAddresses)->
+			knownDistances[model.origin] = knownDistances[model.origin]||{}
+			$.extend knownDistances[model.origin], _.zipHash(lookUpAddresses, _.pluck(foundAddresses, 'text'))
+
+
 	results = $('ul.results-list', this).empty();
-	_.each currentlyFound, (c) -> 
-			bindClinic(c, template.clone().show().click -> changePage '#details-page', c)
-			.appendTo(results)
+	_.each model.clinics, (c) ->
+		$el = template.clone()
+		showDistance = (distance)-> $('.distance-display', $el).slideDown().find('.display').text(distance)
+		bindClinic(c, $el.show()
+			.data(showDistance: showDistance)
+			.click( -> changePage '#details-page', c)
+		).appendTo(results)
 	results.listview 'refresh'
 
 onShow '#details-page', (clinic) ->
