@@ -14,7 +14,7 @@ mapping =
 				if(status != google.maps.GeocoderStatus.OK)
 					return console.error "Geocode failed", address, results, status
 				d.resolve results[0].geometry.location
-	getDistance: (origin, destinations) ->
+	getDistances: (origin, destinations) ->
 		$.Deferred (d) ->
 			geocodeAddresses = _.map [origin].concat(destinations), mapping.geocodeLocation
 			$.when.apply($, geocodeAddresses).done (origin, destinations...) ->
