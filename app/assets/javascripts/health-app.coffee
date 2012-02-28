@@ -1,7 +1,9 @@
 allClinics = -> window.Application.clinics
 insuranceTypeKey = "Types of Insurance Accepted (Private, Medicaid, Uninsured)"
 
-window.knownDistances = []
+knownDistances = []
+findKnownDistance = (origin, c) ->
+	knownDistances[origin] && knownDistances[origin][getFullAddress(c)]
 
 onEvent = (eventType, id, callback) -> 
 	$(document).on eventType, id, -> callback.call(this, $(this).data('page-data'))
@@ -38,8 +40,7 @@ onCreate '#start-page', ->
 		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
 		currentlyFound = _.map _.first(foundIndicies, 5), getClinic
 
-		if(!currentlyFound.length)
-			return alert "No results found"
+		return alert("No results found") if(!currentlyFound.length)
 		
 		street = $('[name=street] ', page).val()
 		changePage '#results-page', 
@@ -48,19 +49,23 @@ onCreate '#start-page', ->
 
 onShow '#results-page', (model)->
 	template = $('#item-template', this)
+	cloneTemplate = -> template.clone().removeAttr('id')
+	origin = model.origin
 
-	if model.origin
-		lookUpAddresses = _.difference(_.map(model.clinics, getFullAddress), knownDistances[model.origin])
+	if origin
+		lookUpAddresses = _.difference(_.map(model.clinics, getFullAddress), knownDistances[origin])
 
-		Application.Mapping.getDistances(model.origin, lookUpAddresses).done (foundAddresses)->
-			knownDistances[model.origin] = knownDistances[model.origin]||{}
-			$.extend knownDistances[model.origin], _.zipHash(lookUpAddresses, _.pluck(foundAddresses, 'text'))
+		Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
+			knownDistances[origin] = knownDistances[origin]||{}
+			$.extend knownDistances[origin], _.zipHash(lookUpAddresses, _.pluck(foundAddresses, 'text'))
 
 
 	results = $('ul.results-list', this).empty();
 	_.each model.clinics, (c) ->
-		$el = template.clone()
-		showDistance = (distance)-> $('.distance-display', $el).slideDown().find('.display').text(distance)
+		$el = cloneTemplate()
+		showDistance = (distance)-> $('.distance-display', $el).slideDown().find('.distance').text(distance)
+		showDistance(findKnownDistance(origin, c)) if findKnownDistance(origin, c)
+
 		bindClinic(c, $el.show()
 			.data(showDistance: showDistance)
 			.click( -> changePage '#details-page', c)
