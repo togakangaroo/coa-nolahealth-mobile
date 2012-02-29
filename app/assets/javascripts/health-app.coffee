@@ -82,6 +82,5 @@ onShow '#details-page', (clinic) ->
 		.val "tel:#{strippedPhone}"
 	
 	$('a.link-to-loc').click (e) ->
-		clinic = states.getCurrentlySelected()||{}
 		e.preventDefault()
 		window.open('http://maps.google.com?q=' + clinic.lat + ',' + clinic.lng + '+(' + clinic.Agency + ')')
