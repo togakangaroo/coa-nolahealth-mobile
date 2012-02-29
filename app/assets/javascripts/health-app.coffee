@@ -1,7 +1,21 @@
 allClinics = -> window.Application.clinics
 insuranceTypeKey = "Types of Insurance Accepted (Private, Medicaid, Uninsured)"
 
-getClinic = (idx) =>
+knownDistances = []
+findKnownDistance = (origin, c) ->
+	knownDistances[origin] && knownDistances[origin][getFullAddress(c)]
+
+onEvent = (eventType, id, callback) -> 
+	$(document).on eventType, id, -> callback.call(this, $(this).data('page-data'))
+onCreate = _.bind onEvent, window, 'pageinit'
+onShow = _.bind onEvent, window, 'pageshow'
+
+changePage = (id, data) ->
+	$(id).data 'page-data', data
+	$.mobile.changePage id
+
+getFullAddress = (c)-> s = " ";c.Address+s+c.City+s+c.State+s+c['Zip Code']
+getClinic = (idx) ->
 	clinic = {}
 	_.each allClinics(), (values, prop) -> clinic[prop] = values[idx]
 	clinic
@@ -10,23 +24,11 @@ bindClinic = (clinic, $el) ->
 		$el.find("[data-bindTo='#{k}']").text( ((v||"")+"") )
 	$el
 
-states = ( ->
-	currentlyFound = []
-	currentlySelected = null
-
-	setCurrentlyFound: (found)-> 
-		if(!(found&&found.length))
-			return false
-		currentlyFound = found
-		true	
-	setCurrentlySelected: (c) => currentlySelected = c	
-	getCurrentlyFound: (found) -> _.first(currentlyFound, 5)
-	getCurrentlySelected: () -> currentlySelected
-)()
-	 
-$('#start-page').live 'pageinit', ->
+onCreate '#start-page', ->
+	page = this
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
+
 		searchFor = _.pluck(
 			$(".insurance-type input[type=checkbox]")
 				.filter(-> $(this).prop('checked'))
@@ -36,27 +38,42 @@ $('#start-page').live 'pageinit', ->
 		foundMatrix = _.map allClinics()[insuranceTypeKey], (insurance) -> 
 			anyMatches (term)->  new RegExp(term, "i").test(insurance)
 		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
-		currentlyFound = _.map foundIndicies, getClinic
+		currentlyFound = _.map _.first(foundIndicies, 5), getClinic
 
-		if(!states.setCurrentlyFound(currentlyFound))
-			return alert "No results found"
-		$.mobile.changePage '#results-page'
+		return alert("No results found") if(!currentlyFound.length)
+		
+		street = $('[name=street] ', page).val()
+		changePage '#results-page', 
+			clinics: currentlyFound
+			origin: street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
 
-$('#results-page').live 'pageshow', ->
+onShow '#results-page', (model)->
 	template = $('#item-template', this)
+	cloneTemplate = -> template.clone().removeAttr('id')
+	origin = model.origin
+
+	if origin
+		lookUpAddresses = _.difference(_.map(model.clinics, getFullAddress), knownDistances[origin])
+
+		Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
+			knownDistances[origin] = knownDistances[origin]||{}
+			$.extend knownDistances[origin], _.zipHash(lookUpAddresses, _.pluck(foundAddresses, 'text'))
+
+
 	results = $('ul.results-list', this).empty();
-	_(states.getCurrentlyFound()).chain()
-		.map((c) -> 
-			bindClinic c, template.clone().show().click ->
-				states.setCurrentlySelected c
-				$.mobile.changePage '#details-page'
-			)
-		.each(($c) -> results.append($c))
+	_.each model.clinics, (c) ->
+		$el = cloneTemplate()
+		showDistance = (distance)-> $('.distance-display', $el).slideDown().find('.distance').text(distance)
+		showDistance(findKnownDistance(origin, c)) if findKnownDistance(origin, c)
+
+		bindClinic(c, $el.show()
+			.data(showDistance: showDistance)
+			.click( -> changePage '#details-page', c)
+		).appendTo(results)
 	results.listview 'refresh'
 
-$('#details-page').live 'pageshow', ->
+onShow '#details-page', (clinic) ->
 	$page = $(this)
-	clinic = states.getCurrentlySelected()||{}
 	strippedPhone = (clinic.Phone||"").replace(/[^\d]/g,'')
 
 	bindClinic clinic, $page
