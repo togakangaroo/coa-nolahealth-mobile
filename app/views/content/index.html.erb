@@ -5,13 +5,13 @@
 		<h3>504HealthNet Care Finder</h3>	
 		<h4>Find Low or No-Pay Community Health Clinics in your neighborhood</h4>
 		<div data-role="fieldcontain">
-		 	<fieldset data-role="controlgroup" class="insurance-type">
+			<fieldset data-role="controlgroup" class="insurance-type">
 				<legend>Select Insurance Needs</legend>
 				<input type="checkbox" name="private" id="private"/><label for="private">Private</label>
 				<input type="checkbox" name="medicaid" id="medicaid" /><label for="medicaid">Medicaid</label>
 				<input type="checkbox" name="gnochc" id="gnochc" /><label for="gnochc">GNOCHC</label>
 				<input type="checkbox" name="uninsured" id="uninsured" /><label for="uninsured">Uninsured</label>
-		   </fieldset>
+			</fieldset>
 		</div>
 		
 		<p>Please provide a location:<br/>
@@ -24,10 +24,8 @@
 		
 		<button data-role="button" type="submit">Go!</button>
 
-		<div style=text-align:center data-role="footer">
-			<p>Provided by 504HealthNet</p>
-		</div>
 	</div>
+	<%= render :partial => 'shared/footer' %>
 </div>
 
 <%= render :partial => 'details_page' %>

@@ -1,20 +1,17 @@
 <div data-role="page" data-theme="b" id="results-page">
-<div data-role="header">
-	<h1>Search Results</h1>
-</div>
-<div data-role="content">
-	<div class="content-primary">
-		<li style="display: none" id="item-template">
-			<h3 data-bindTo="Agency"></h3>
-			<p class="distance-display" style="display: none"><strong><span class="distance">n</span> miles from entered address</strong></p>
-		</li>
-		<ul class="results-list" data-role="listview">
-
-		</ul>
+	<div data-role="header">
+		<h1>Search Results</h1>
 	</div>
-</div>
-<div style=text-align:center data-role="footer">
-	<p style=font-size:8pt >504 HealthNet Care Finder</p>
-</div>
+	<div data-role="content">
+		<div class="content-primary">
+			<li style="display: none" id="item-template">
+				<h3 data-bindTo="Agency"></h3>
+				<p class="distance-display" style="display: none"><strong><span class="distance">n</span> miles from entered address</strong></p>
+			</li>
+			<ul class="results-list" data-role="listview">
 
+			</ul>
+		</div>
+	</div>
+	<%= render :partial => 'shared/footer' %>
 </div>
