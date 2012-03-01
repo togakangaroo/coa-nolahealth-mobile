@@ -30,3 +30,20 @@
 
 <%= render :partial => 'details_page' %>
 <%= render :partial => 'results_page' %>
+
+<%= content_for :head do %>
+	<% # Use the hardcoded JSON if the PROVIDER table has not been loaded. 
+	   # TODO: Remove this once everyone has migrated to the db-provisioned version. -rcs %>
+	<% if @providers.nil? || @providers.empty? %>
+		<%= render :partial => 'shared/hackathon-data2' %>
+	<% else%>
+		<script>
+			//<![CDATA[
+				window.Application = window.Application || {};
+				$.extend(window.Application, {
+					clinics: <%= raw providers_to_json(@providers) %>
+							});
+						//]]>
+		</script>
+		<% end %>
+<% end %>
