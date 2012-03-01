@@ -4,6 +4,9 @@ class AddProviderFields < ActiveRecord::Migration
 
 	def up
 		change_table :providers do |t|
+			# Address field was too short; increasing to 512
+			t.change :address, :string, :limit => 512
+
 			t.boolean :verified, :default => false
 
 			t.decimal :lat, :precision => 20, :scale => 16, :default => 0.0
