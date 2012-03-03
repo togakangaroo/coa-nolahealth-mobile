@@ -79,7 +79,7 @@ onShow '#details-page', (clinic) ->
 	bindClinic clinic, $page
 
 	$page.find('.provider-Phone-link')
-		.val "tel:#{strippedPhone}"
+		.attr href: "tel:#{strippedPhone}"
 	
 	$('a.link-to-loc').click (e) ->
 		e.preventDefault()
