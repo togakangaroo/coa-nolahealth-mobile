@@ -1,5 +1,5 @@
 /*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * This is a manifest file that'll be compiled into admin.css, which will include all the files
  * listed below.
  *
  * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
@@ -9,5 +9,16 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require mobilehealth1
 */
+
+body {
+	background-color: #8CC63F;
+  font-family: 'Courier', 'Fixed', monospace;
+  font-size: 12px;
+}
+
+#wrapper {
+	margin-left: 5%;
+	margin-right: 5%;
+	background-color: white;
+}
