@@ -17,12 +17,13 @@
 		<p>Please provide a location:<br/>
 			(Any address will do)
 		</p>
-		<fieldset>
+		<button name=geolocate title="Geolocate" data-role=button data-icon=star data-inline=true>Find My Location</button>
+		<fieldset class=origin>
 			<label>Street Address: <input name="street" /></label>
 			<label>City: <input name="city" value="New Orleans" /></label>
 		</fieldset>
 		
-		<button data-role="button" type="submit">Go!</button>
+		<button data-role=button type="submit">Go!</button>
 
 	</div>
 	<%= render :partial => 'shared/footer' %>

@@ -25,6 +25,16 @@ bindClinic = (clinic, $el) ->
 
 onCreate '#start-page', ->
 	page = this
+	geolocated = null
+
+	$('button[name=geolocate]').click ->
+		navigator && navigator.geolocation && navigator.geolocation.getCurrentPosition (
+			(position) -> 
+				geolocated = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+				$('.origin', page)					
+					.find('[name=street]').val("<Current Location>").end()
+					.find('input').prop('disabled', true)
+				), ((err) -> console.error 'error geolocating', err)
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
 
@@ -45,7 +55,7 @@ onCreate '#start-page', ->
 		return alert("No results found") if(!currentlyFound.length)
 		
 		street = $('[name=street] ', page).val()
-		origin = street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
+		origin = geolocated || street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
 		if origin
 			lookUpAddresses = _.difference(_.map(currentlyFound, getFullAddress), knownDistances[origin])
 			lookUpAddresses.length && Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
