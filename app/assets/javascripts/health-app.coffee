@@ -1,9 +1,8 @@
+showAtATime = 5
 allClinics = -> window.Application.clinics
 insuranceTypeKey = "Types of Insurance Accepted (Private, Medicaid, Uninsured)"
 
 knownDistances = []
-findKnownDistance = (origin, c) ->
-	knownDistances[origin] && knownDistances[origin][getFullAddress(c)]
 
 onEvent = (eventType, id, callback) -> 
 	$(document).on eventType, id, -> callback.call(this, $(this).data('page-data'))
@@ -29,6 +28,9 @@ onCreate '#start-page', ->
 	$('button[type=submit]').click (e) ->
 		e.preventDefault()
 
+		pageInteraction = $.Deferred().done (res) ->
+			changePage '#results-page', res
+
 		searchFor = _.pluck(
 			$(".insurance-type input[type=checkbox]")
 				.filter(-> $(this).prop('checked'))
@@ -38,38 +40,44 @@ onCreate '#start-page', ->
 		foundMatrix = _.map allClinics()[insuranceTypeKey], (insurance) -> 
 			anyMatches (term)->  new RegExp(term, "i").test(insurance)
 		foundIndicies = _.compact(_.map foundMatrix, (v, i) -> v && i || null)
-		currentlyFound = _.map _.first(foundIndicies, 5), getClinic
+		currentlyFound = _.map foundIndicies, getClinic
 
 		return alert("No results found") if(!currentlyFound.length)
 		
 		street = $('[name=street] ', page).val()
-		changePage '#results-page', 
-			clinics: currentlyFound
-			origin: street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
+		origin = street.replace(/\W/g, '') && (street+" "+$('[name=city]', page).val())
+		if origin
+			lookUpAddresses = _.difference(_.map(currentlyFound, getFullAddress), knownDistances[origin])
+			lookUpAddresses.length && Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
+				knownDistances[origin] = knownDistances[origin]||{}
+				$.extend knownDistances[origin], _.zipHash(lookUpAddresses, _.map(foundAddresses, (a)-> a&&a.text))
+				pageInteraction.resolve 
+					clinics: currentlyFound
+					distances: knownDistances[origin]
+		else
+			pageInteraction.resolve clinics:currentlyFound
+			
 
 onShow '#results-page', (model)->
 	template = $('#item-template', this)
 	cloneTemplate = -> template.clone().removeAttr('id')
-	origin = model.origin
+	results = $('ul.results-list', this)
+	distances = model.distances || {}
+	clinicDistances = _.chain(model.clinics)
+		.map((c) -> [c, distances[getFullAddress(c)]])
+		.sortBy((cd) -> parseFloat(cd[1], 10))
+		.first(showAtATime)
+		.value()
 
-	if origin
-		lookUpAddresses = _.difference(_.map(model.clinics, getFullAddress), knownDistances[origin])
-
-		Application.Mapping.getDistances(origin, lookUpAddresses).done (foundAddresses)->
-			knownDistances[origin] = knownDistances[origin]||{}
-			$.extend knownDistances[origin], _.zipHash(lookUpAddresses, _.pluck(foundAddresses, 'text'))
-
-
-	results = $('ul.results-list', this).empty();
-	_.each model.clinics, (c) ->
+	results.empty();
+	_.each clinicDistances, (cd) ->
 		$el = cloneTemplate()
-		showDistance = (distance)-> $('.distance-display', $el).slideDown().find('.distance').text(distance)
-		showDistance(findKnownDistance(origin, c)) if findKnownDistance(origin, c)
+		
+		bindClinic(cd[0], $el).appendTo(results)
+		cd[1] && $('.distance-display', $el).show().find('.distance').text(cd[1])
 
-		bindClinic(c, $el.show()
-			.data(showDistance: showDistance)
-			.click( -> changePage '#details-page', c)
-		).appendTo(results)
+		$el.show().click -> changePage '#details-page', cd[0]
+
 	results.listview 'refresh'
 
 onShow '#details-page', (clinic) ->
@@ -79,7 +87,7 @@ onShow '#details-page', (clinic) ->
 	bindClinic clinic, $page
 
 	$page.find('.provider-Phone-link')
-		.val "tel:#{strippedPhone}"
+		.attr 'href', "tel:#{strippedPhone}"
 	
 	$('a.link-to-loc').click (e) ->
 		e.preventDefault()
