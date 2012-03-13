@@ -98,6 +98,7 @@ onShow '#details-page', (clinic) ->
 
 	$page.find('.provider-Phone-link')
 		.attr 'href', "tel:#{strippedPhone}"
+	clinic.Website && $page.find('.agency').wrap "<a href='http://#{clinic.Website}' target='_blank'>"
 	
 	$('a.link-to-loc').click (e) ->
 		e.preventDefault()
